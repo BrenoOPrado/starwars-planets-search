@@ -4,6 +4,12 @@ import ContextAPI from './ContextAPI';
 const Provider = ({ children }) => {
   const [APIResult, setAPIResult] = useState({ results: [] });
   const [planets, setPlanets] = useState([]);
+  const [planetFilters, setPlanetFilters] = useState([]);
+  const [textFilter, setTextFilter] = useState({
+    filterByName: {
+      name: '',
+    },
+  });
 
   useEffect(() => {
     const apiFetchFunc = async () => {
@@ -31,10 +37,17 @@ const Provider = ({ children }) => {
       url: item.url,
     }));
     setPlanets(results);
+    setPlanetFilters(results);
   }, [APIResult]);
 
+  useEffect(() => {
+    const results = planets.filter((item) => (
+      item.name.toUpperCase().includes(textFilter.filterByName.name.toUpperCase())));
+    setPlanetFilters(results);
+  }, [textFilter]);
+
   return (
-    <ContextAPI.Provider value={ { planets } }>
+    <ContextAPI.Provider value={ { planets: planetFilters, textFilter, setTextFilter } }>
       {children}
     </ContextAPI.Provider>
   );

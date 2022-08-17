@@ -2,13 +2,28 @@ import React, { useContext } from 'react';
 import ContextAPI from '../context/ContextAPI';
 
 function Planet() {
-  const { planets } = useContext(ContextAPI);
-  console.log(planets);
+  const { planets, textFilter, setTextFilter } = useContext(ContextAPI);
+
+  const nameFilterChange = ({ target }) => {
+    setTextFilter({
+      ...textFilter,
+      filterByName: {
+        name: target.value,
+      },
+    });
+  };
 
   return (
     <div>
+      <input
+        type="text"
+        value={ textFilter.filterByName.name }
+        onChange={ (e) => nameFilterChange(e) }
+        data-testid="name-filter"
+        className="name-filter"
+      />
       {
-        (planets.length <= 0) ? <h1>Carregando...</h1>
+        (planets.length <= 0) ? <h3>Não existem planetas assim</h3>
           : (
             <table>
               <thead>
