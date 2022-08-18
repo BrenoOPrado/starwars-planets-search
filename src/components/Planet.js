@@ -170,7 +170,9 @@ function Planet() {
               <thead>
                 <tr>
                   {
-                    Object.keys(planets[0]).map((item) => (<th key={ item }>{item}</th>))
+                    Object.keys(planets[0]).map((item) => (
+                      <th id={ item } key={ item }>{item}</th>
+                    ))
                   }
                 </tr>
               </thead>

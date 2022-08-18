@@ -74,7 +74,7 @@ p {
   margin-bottom: 1rem;
 }
 
-h1 , h2 , h3 , h4 , h5 {
+h1, h2, h3, h4, h5 {
   font-family: var(--headingFont);
   font-weight: 400;
   letter-spacing: var(--letterSpacing);
@@ -105,7 +105,7 @@ h5 {
   font-size: 1.25rem;
 }
 
-small , .text_small {
+small, .text_small {
   font-size: 0.8rem;
 }
 
@@ -146,13 +146,14 @@ button:disabled {
 }
 
 form {
-  background: var(--white);
+  background-color: rgba(0, 0, 0, 0);
   border-radius: var(--borderRadius);
   box-shadow: var(--shadow-2);
+  display: flex;
   padding: 2rem 2.5rem;
 }
 
-input , textarea , select {
+input, textarea, select {
   background: var(--grey-50);
   border: 1px solid var(--grey-200);
   border-radius: var(--borderRadius);
@@ -216,9 +217,4 @@ td {
   padding: 15px;
   text-align: center;
   width: 150px;
-}
-
-form {
-  background-color: rgba(0, 0, 0, 0);
-  display: flex;
 }
