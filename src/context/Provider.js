@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import ContextAPI from './ContextAPI';
 
 const Provider = ({ children }) => {
@@ -123,6 +124,10 @@ const Provider = ({ children }) => {
       {children}
     </ContextAPI.Provider>
   );
+};
+
+Provider.propTypes = {
+  children: PropTypes.element.isRequired,
 };
 
 export default Provider;
