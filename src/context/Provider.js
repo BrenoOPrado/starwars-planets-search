@@ -13,6 +13,7 @@ const Provider = ({ children }) => {
   const [numericFilter, setNumericFilter] = useState({
     filterByNumericValues: [],
   });
+  const [controlNumber, setControlNumber] = useState(0);
   const [numericHelper, setNumericHelper] = useState({});
   const [numericOptions, setNumericOptions] = useState([
     'population', 'diameter', 'orbital_period',
@@ -60,36 +61,41 @@ const Provider = ({ children }) => {
   }, [textFilter]);
 
   useEffect(() => {
-    console.log(numericFilter);
-    setNumericOptions(numericOptions.filter((item) => item !== numericHelper.column));
-    numericFilter.filterByNumericValues.forEach((item) => {
-      switch (item.comparison) {
-      case 'maior que':
-        setPlanetFilters(
-          planetFilters.filter((planet) => (
-            parseFloat(planet[item.column]) > parseFloat(item.value)
-          )),
-        );
-        break;
-      case 'menor que':
-        setPlanetFilters(
-          planetFilters.filter((planet) => (
-            parseFloat(planet[item.column]) < parseFloat(item.value)
-          )),
-        );
-        break;
-      case 'igual a':
-        setPlanetFilters(
-          planetFilters.filter((planet) => (
-            parseFloat(planet[item.column]) === parseFloat(item.value)
-          )),
-        );
-        break;
+    if (numericFilter.filterByNumericValues.length > 0) {
+      const filters = (controlNumber < numericFilter.filterByNumericValues.length)
+        ? planetFilters : planets;
+      numericFilter.filterByNumericValues.forEach((item) => {
+        switch (item.comparison) {
+        case 'maior que':
+          setPlanetFilters(
+            filters.filter((planet) => (
+              parseFloat(planet[item.column]) > parseFloat(item.value)
+            )),
+          );
+          break;
+        case 'menor que':
+          setPlanetFilters(
+            filters.filter((planet) => (
+              parseFloat(planet[item.column]) < parseFloat(item.value)
+            )),
+          );
+          break;
+        case 'igual a':
+          setPlanetFilters(
+            filters.filter((planet) => (
+              parseFloat(planet[item.column]) === parseFloat(item.value)
+            )),
+          );
+          break;
 
-      default:
-        break;
-      }
-    });
+        default:
+          break;
+        }
+      });
+    } else {
+      setPlanetFilters(planets);
+    }
+    setControlNumber(numericFilter.filterByNumericValues.length);
   }, [numericFilter]);
 
   useEffect(() => {
@@ -111,6 +117,7 @@ const Provider = ({ children }) => {
         numericHelper,
         setNumericHelper,
         numericOptions,
+        setNumericOptions,
       } }
     >
       {children}

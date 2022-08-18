@@ -11,6 +11,7 @@ function Planet() {
     numericHelper,
     setNumericHelper,
     numericOptions,
+    setNumericOptions,
   } = useContext(ContextAPI);
 
   const nameFilterChange = ({ target }) => {
@@ -23,7 +24,6 @@ function Planet() {
   };
 
   const numericInputChange = ({ target }) => {
-    console.log(target.value);
     setNumericHelper({
       ...numericHelper,
       [target.name]: target.value,
@@ -37,6 +37,16 @@ function Planet() {
         ...numericFilter.filterByNumericValues, numericHelper,
       ],
     });
+    setNumericOptions(numericOptions.filter((item) => item !== numericHelper.column));
+  };
+
+  const removeFilter = (obj) => {
+    setNumericFilter({
+      ...numericFilter,
+      filterByNumericValues: numericFilter.filterByNumericValues.filter((item) => (
+        item !== obj)),
+    });
+    setNumericOptions([obj.column, ...numericOptions]);
   };
 
   return (
@@ -112,6 +122,7 @@ function Planet() {
           type="button"
           data-testid="button-filter"
           onClick={ () => filterClick() }
+          disabled={ (numericOptions.length <= 0) }
         >
           Filtrar
         </button>
@@ -123,7 +134,35 @@ function Planet() {
           data-testid="name-filter"
           className="name-filter"
         />
+        <button
+          type="button"
+          data-testid="button-remove-filters"
+          onClick={ () => {
+            setNumericFilter({ filterByNumericValues: [] });
+            setNumericOptions([
+              'population', 'diameter', 'orbital_period',
+              'rotation_period', 'surface_water',
+            ]);
+          } }
+        >
+          Remover filtros
+        </button>
       </form>
+      <ul>
+        {
+          numericFilter.filterByNumericValues.map((filter, index) => (
+            <li key={ index } data-testid="filter">
+              {`${filter.column} ${filter.comparison} ${filter.value}`}
+              <button
+                type="button"
+                onClick={ () => removeFilter(filter) }
+              >
+                Deletar
+              </button>
+            </li>
+          ))
+        }
+      </ul>
       {
         (planets.length <= 0) ? <h3>Não existem planetas assim</h3>
           : (
