@@ -217,3 +217,8 @@ td {
   text-align: center;
   width: 150px;
 }
+
+form {
+  background-color: rgba(0, 0, 0, 0);
+  display: flex;
+}

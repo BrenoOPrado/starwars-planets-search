@@ -10,6 +10,14 @@ const Provider = ({ children }) => {
       name: '',
     },
   });
+  const [numericFilter, setNumericFilter] = useState({
+    filterByNumericValues: [],
+  });
+  const [numericHelper, setNumericHelper] = useState({});
+  const [numericOptions, setNumericOptions] = useState([
+    'population', 'diameter', 'orbital_period',
+    'rotation_period', 'surface_water',
+  ]);
 
   useEffect(() => {
     const apiFetchFunc = async () => {
@@ -18,6 +26,11 @@ const Provider = ({ children }) => {
         .then((result) => setAPIResult(result));
     };
     apiFetchFunc();
+    setNumericHelper({
+      column: 'population',
+      comparison: 'maior que',
+      value: '0',
+    });
   }, []);
 
   useEffect(() => {
@@ -46,8 +59,60 @@ const Provider = ({ children }) => {
     setPlanetFilters(results);
   }, [textFilter]);
 
+  useEffect(() => {
+    console.log(numericFilter);
+    setNumericOptions(numericOptions.filter((item) => item !== numericHelper.column));
+    numericFilter.filterByNumericValues.forEach((item) => {
+      switch (item.comparison) {
+      case 'maior que':
+        setPlanetFilters(
+          planetFilters.filter((planet) => (
+            parseFloat(planet[item.column]) > parseFloat(item.value)
+          )),
+        );
+        break;
+      case 'menor que':
+        setPlanetFilters(
+          planetFilters.filter((planet) => (
+            parseFloat(planet[item.column]) < parseFloat(item.value)
+          )),
+        );
+        break;
+      case 'igual a':
+        setPlanetFilters(
+          planetFilters.filter((planet) => (
+            parseFloat(planet[item.column]) === parseFloat(item.value)
+          )),
+        );
+        break;
+
+      default:
+        break;
+      }
+    });
+  }, [numericFilter]);
+
+  useEffect(() => {
+    setNumericHelper({
+      column: numericOptions[0],
+      comparison: 'maior que',
+      value: '0',
+    });
+  }, [numericOptions]);
+
   return (
-    <ContextAPI.Provider value={ { planets: planetFilters, textFilter, setTextFilter } }>
+    <ContextAPI.Provider
+      value={ {
+        planets: planetFilters,
+        textFilter,
+        setTextFilter,
+        setNumericFilter,
+        numericFilter,
+        numericHelper,
+        setNumericHelper,
+        numericOptions,
+      } }
+    >
       {children}
     </ContextAPI.Provider>
   );
